@@ -5,10 +5,10 @@
   
   <entry>
     <title>Git安装及配置</title>
-    <link href="/2024/10/07/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
-    <url>/2024/10/07/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
+    <link href="/2024/10/07/Git%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE/"/>
+    <url>/2024/10/07/Git%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
     
-    <content type="html"><![CDATA[<p>Git官方下载：<a href="https://git-scm.com/download/win/">https://git-scm.com/download/win/</a></p><p>cmd查看Git版本：git –version</p><p>打开git bash配置用户名和邮箱（用户名和邮箱随便设置就可以）<br>git config –global user.name zejsz<br>git config –global user.email <a href="mailto:&#x7a;&#x65;&#x6a;&#115;&#x7a;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">&#x7a;&#x65;&#x6a;&#115;&#x7a;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;</a></p><p>查看是否配置成功<br>git config user.name<br>git config user.email</p>]]></content>
+    <content type="html"><![CDATA[<p>Git官方下载：<a href="https://git-scm.com/download/win/">https://git-scm.com/download/win/</a></p><p>cmd查看Git版本：git –version</p><p>打开git bash配置用户名和邮箱（用户名和邮箱随便设置就可以）<br>git config –global user.name zejsz<br>git config –global user.email <a href="mailto:&#x7a;&#101;&#106;&#115;&#x7a;&#64;&#x31;&#54;&#51;&#x2e;&#x63;&#111;&#109;">&#x7a;&#101;&#106;&#115;&#x7a;&#64;&#x31;&#54;&#51;&#x2e;&#x63;&#111;&#109;</a></p><p>查看是否配置成功<br>git config user.name<br>git config user.email</p>]]></content>
     
     
     <categories>
