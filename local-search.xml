@@ -4,16 +4,16 @@
   
   
   <entry>
-    <title>测试文章</title>
-    <link href="/2019/10/10/hello-world/"/>
-    <url>/2019/10/10/hello-world/</url>
+    <title>Git安装及配置</title>
+    <link href="/2024/10/07/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
+    <url>/2024/10/07/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
     
-    <content type="html"><![CDATA[<p>这里是图片<br><img src="/img/%E8%83%8C%E9%9D%A0%E8%83%8C.jpg"></p>]]></content>
+    <content type="html"><![CDATA[<p>Git官方下载：<a href="https://git-scm.com/download/win/">https://git-scm.com/download/win/</a></p><p>cmd查看Git版本：git –version</p><p>打开git bash配置用户名和邮箱（用户名和邮箱随便设置就可以）<br>git config –global user.name zejsz<br>git config –global user.email <a href="mailto:&#x7a;&#x65;&#x6a;&#115;&#x7a;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;">&#x7a;&#x65;&#x6a;&#115;&#x7a;&#x40;&#49;&#54;&#51;&#x2e;&#x63;&#x6f;&#109;</a></p><p>查看是否配置成功<br>git config user.name<br>git config user.email</p>]]></content>
     
     
     <categories>
       
-      <category>Java</category>
+      <category>Git</category>
       
     </categories>
     
@@ -29,11 +29,11 @@
   
   
   <entry>
-    <title>测试文章</title>
-    <link href="/2019/10/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
-    <url>/2019/10/10/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</url>
+    <title>背靠背</title>
+    <link href="/2019/10/10/hello-world/"/>
+    <url>/2019/10/10/hello-world/</url>
     
-    <content type="html"><![CDATA[<p>以下是文章内容</p>]]></content>
+    <content type="html"><![CDATA[<p>这里是图片<br><img src="/img/%E8%83%8C%E9%9D%A0%E8%83%8C.jpg"></p>]]></content>
     
     
     <categories>
