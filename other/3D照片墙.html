@@ -19,13 +19,15 @@
   <meta name="author" content="中二技术宅">
   <meta name="keywords" content="">
   
-    <meta name="description" content="中二技术宅的个人博客">
+    <meta name="description" content="Document              * {             list-style: none;             margin: 0;             padding: 0;         }          body {             &#x2F;* 设置透视点 *&#x2F;             perspective: 1000">
 <meta property="og:type" content="website">
-<meta property="og:title" content="分类 - Windows">
-<meta property="og:url" content="https://only585847.github.io/categories/Bug/Windows/index.html">
+<meta property="og:title" content="page.title">
+<meta property="og:url" content="https://only585847.github.io/other/3D%E7%85%A7%E7%89%87%E5%A2%99.html">
 <meta property="og:site_name" content="中二技术宅">
-<meta property="og:description" content="中二技术宅的个人博客">
+<meta property="og:description" content="Document              * {             list-style: none;             margin: 0;             padding: 0;         }          body {             &#x2F;* 设置透视点 *&#x2F;             perspective: 1000">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-03T15:46:31.037Z">
+<meta property="article:modified_time" content="2024-11-03T15:46:31.037Z">
 <meta property="article:author" content="中二技术宅">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -35,7 +37,7 @@
   
     <script type="text/javascript" src="/js/love.js"></script> <!-- 爆炸红心效果 --> <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>  <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>  <script type="text/javascript" src="/js/firework.js"></script> <script type="text/javascript" src="/js/樱花特性/樱花特性.js"></script>
   
-  <title>分类 - Windows - 中二技术宅</title>
+  <title>page.title - 中二技术宅</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -219,7 +221,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="分类 - Windows"></span>
+            <span id="subtitle" data-typed-text="page.title"></span>
           
         </div>
 
@@ -246,23 +248,235 @@
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2024</p>
-    
-    <a href="/2024/10/16/%E8%A7%A3%E5%86%B3Windows%E6%97%A0%E6%B3%95%E5%AE%8C%E6%88%90%E8%AF%B7%E6%B1%82%E7%9A%84%E6%9B%B4%E6%94%B9/" class="list-group-item list-group-item-action">
-      <time>10-16</time>
-      <div class="list-group-item-title">解决Windows无法完成请求的更改</div>
-    </a>
-  
-</div>
+<article class="page-content">
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* 设置透视点 */
+            perspective: 1000px;
+        }
+
+        #cube {
+            width: 200px;
+            height: 200px;
+            margin: 200px auto;
+            position: relative;
+            /* 保留3D效果 */
+            transform-style: preserve-3d;
+            /* transition: all 1s linear; */
+        }
+
+        .page {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* 设置透明度 */
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgb(100, 99, 99);
+
+        }
+
+        /* .cube:hover {
+            transform: rotate3d(20, 0, 0, 360deg);
+        } */
+
+        .nood_front {
+            background: no-repeat url('/img/hitman_reborn/背靠背.jpg');
+            background-size: 100% 100%;
+            transform: translateZ(100px);
+            animation:nood_front 1s infinite linear alternate;
+        }
+
+        .nood_back {
+            background: no-repeat url('/img/hitman_reborn/骷髅姆.jpg');
+            background-size: 100% 100%;
+            transform: translateZ(-100px) rotateY(180deg);
+            animation:nood_back 1s infinite linear alternate;
+        }
+
+        .nood_left {
+            background: no-repeat url('/img/hitman_reborn/异国的雪夜.jpg');
+            background-size: 100% 100%;
+            transform: translateX(-100px) rotateY(90deg);
+            animation:nood_left 1s infinite linear alternate;
+        }
+
+        .nood_right {
+            background: no-repeat url('/img/hitman_reborn/69.jpg');
+            background-size: 100% 100%;
+            transform: translateX(100px) rotateY(-90deg);
+            animation:nood_right 1s infinite linear alternate;
+        }
+
+        .nood_top {
+            background: no-repeat url('/img/hitman_reborn/Ful.jpg');
+            background-size: 100% 100%;
+            transform: translateY(-100px) rotateX(90deg);
+            animation:nood_top 1s infinite linear alternate;
+        }
+
+        .nood_bottom {
+            background: no-repeat url('/img/hitman_reborn/云豆_云雀.jpg');
+            background-size: 100% 100%;
+            transform: translateY(100px) rotateX(-90deg);
+            animation:nood_bottom 1s infinite linear alternate;
+        }
 
 
+        @keyframes nood_front {
+            from {
+                transform: translateZ(100px);
+            }
+            to {
+                transform: translateZ(200px);
+            }
+        }
+
+        @keyframes nood_back {
+            from {
+                transform: translateZ(-100px) rotateY(180deg);
+            }
+            to {
+                transform: translateZ(-200px) rotateY(180deg);
+            }
+        }
+
+        @keyframes nood_left {
+            from {
+                transform: translateX(-100px) rotateY(90deg);
+            }
+            to {
+                transform: translateX(-200px) rotateY(90deg);
+            }
+        }
+
+        @keyframes nood_right {
+            from {
+                transform: translateX(100px) rotateY(-90deg);
+            }
+            to {
+                transform: translateX(200px) rotateY(-90deg);
+            }
+        }
+
+        @keyframes nood_top {
+            from {
+                transform: translateY(-100px) rotateX(90deg);
+            }
+            to {
+                transform: translateY(-200px) rotateX(90deg);
+            }
+        }
+
+        @keyframes nood_bottom {
+            from {
+                transform: translateY(100px) rotateX(-90deg);
+            }
+            to {
+                transform: translateY(200px) rotateX(-90deg);
+            }
+        }
+    </style>
+</head> 
+
+<body>
+    <audio style="margin-left: 300px;" src="/sound/浅野隼人%20-%20小手鞠.mp3" id="bgm" controls="controls" autoplay loop></audio>
+    <!-- <p>
+            1. perspective设置透视点，可以设置为任意值，但通常推荐设置为600-1000之间
+            2.位移（translate）
+                transform: translateX(n)
+                让元素沿着x轴移动
+                    设置正数: 从左向右
+                    设置负数: 从右向左
+                transform: translateY(n)
+                让元素沿着Y轴移动
+                    设置正数: 从上向下
+                    设置负数: 从下向上
+                transform: translateZ(n) - 新效果 配合perspective使用
+                    让元素沿着Z轴移动
+                        设置正数: 朝向我们视线移动(靠近我们)
+                        设置负数: 背向移动(远离我们)
+            3. 旋转（rotate）
+                rotateX(angle)
+                    方向判断利用左手原则
+                rotateY(angle)
+                    方向判断利用左手原则
+                rotateZ(angle)
+                    方向判断利用左手原则
+            4.缩放（scale）
+                scaleX()
+                    沿着x轴放大或缩小
+                scaleY()
+                    沿着y轴放大或缩小
+                scaleZ()
+                    沿着Z轴放到或缩小
+            5.倾斜（skew）
+                skewX()
+                    沿着x轴倾斜，x轴方向的两条边平行
+                skewY()
+                    沿着y轴倾斜，y轴方向的两条边平行
+            6.子元素保留3D转换
+                transform-style: flat；
+                transform-style: preserve-3d;
+                flat 不保留3d转换，默认值
+                preserve-3d; 子元素保留3d转换，如果不设置这个属性，内部元素不会存在3D的遮挡关系(伪3D)
+    </p> -->
+
+    <div id="cube">
+        <div class="page nood_front"></div>
+        <div class="page nood_back"></div>
+        <div class="page nood_left"></div>
+        <div class="page nood_right"></div>
+        <div class="page nood_top"></div>
+        <div class="page nood_bottom"></div>
+    </div>
+</body>
+<script>
+    document.onmousedown = function (event) {
+        var that = document.getElementById('cube');
+        var reg = /\-?[0-9]+\.?[0-9]*/g;
+        var bf = that.style.transform || '0,0';
+        var arr = bf.match(reg);
+        var bfX = Number(arr[0]);
+        var bfY = Number(arr[1]);
+        var startX = event.pageX;
+        var startY = event.pageY;
+        document.onmousemove = function (event) {
+            var disX = event.pageX - startX;
+            var disY = event.pageY - startY;
+            var y = (disX + bfY) % 360;
+            var x = -(disY + bfX) % 360;
+            that.style.webkitTransform = "rotateX(" + x + "deg) rotateY(" + y + "deg) rotateZ(0deg)";
+        };
+
+        document.onmouseup = function (event) {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        };
+        return false;
+    }
+</script>
+
+</html>
+
+
+  
+
+</article>
 
 
 
