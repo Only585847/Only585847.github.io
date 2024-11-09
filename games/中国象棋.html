@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--加入下面这行代码避免出现中文乱码，原理解释如下-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTML5实现中国象棋游戏在线演示</title>
+<link href="/css/games/chinese_xiangqi/zzsc.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+<div class="box" id="box">
+	<div class="chess_left">
+		<canvas id="chess"><h1>对不起，您的浏览器不支持HTML5，请升级浏览器至IE9、firefox或者谷歌浏览器！</h1></canvas>
+		<audio src="audio/click.wav" id="clickAudio" preload="auto"></audio>
+		<!--<audio src="audio/check.wav" id="checkAudio" preload="auto"></audio>-->
+		<audio src="audio/select.wav" id="selectAudio" preload="auto"></audio>
+		<div>
+			<div class="bn_box" id="bnBox">
+				<input type="button" name="offensivePlay" id="tyroPlay" value="新手水平" />
+				<input type="button" name="offensivePlay" id="superPlay" value="中级水平" />
+                <input type="button" name="button" id="" value="大师水平" disabled />
+				<!--
+			<input type="button" name="offensivePlay" id="offensivePlay" value="先手开始" />
+			<input type="button" name="defensivePlay" id="defensivePlay" value="后手开始" />
+			-->
+				<input type="button" name="regret" id="regretBn" value="悔棋" />
+				<input type="button" name="billBn" id="billBn" value="棋谱" class="bn_box" />
+				<input type="button" name="stypeBn" id="stypeBn" value="换肤" />
+			</div>
+		</div>
+	</div>
+	<div class="chess_right" id="chessRight">
+		<select name="billList" id="billList">
+		</select>
+		<ol id="billBox" class="bill_box">
+		</ol>
+	</div>
+	<div id="moveInfo" class="move_info"> </div>
+</div>
+
+<script src="/js/games/chinese_xiangqi/common.js"></script> 
+<script src="/js/games/chinese_xiangqi/play.js"></script> 
+<script src="/js/games/chinese_xiangqi/AI.js"></script> 
+<script src="/js/games/chinese_xiangqi/bill.js"></script> 
+<script src="/js/games/chinese_xiangqi/gambit.js"></script>
+
+<div class="v_share" style="width:700px;margin:5px auto;padding:0 0 0 380px;overflow:hidden">
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + new Date().getHours
+();
+</script>
+<!-- Baidu Button END -->
+</div>
+<script type="text/javascript">
+abc();
+</script>
+
+</body>
+</html>
