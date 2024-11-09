@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄罗斯方块</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #gameBoard {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            grid-template-rows: repeat(20, 30px);
+            border: 1px solid #000;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+        }
+        .active {
+            background-color: #00f;
+        }
+        .frozen {
+            background-color: #000;
+        }
+        #score {
+            font-size: 24px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">分数: 0</div>
+    <div id="gameBoard"></div>
+
+    <script>
+        const gameBoard = document.getElementById('gameBoard');
+        const scoreDisplay = document.getElementById('score');
+        const rows = 20;
+        const cols = 10;
+        const cells = [];
+        let score = 0;
+
+        // 初始化游戏板
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                gameBoard.appendChild(cell);
+                cells.push(cell);
+            }
+        }
+
+        // 方块的形状
+        const shapes = [
+            [[1, 1, 1, 1]], // I
+            [[1, 1], [1, 1]], // O
+            [[1, 1, 0], [0, 1, 1]], // Z
+            [[0, 1, 1], [1, 1, 0]], // S
+            [[1, 1, 1], [0, 1, 0]], // T
+            [[1, 1, 1], [0, 0, 1]], // L
+            [[1, 1, 1], [1, 0, 0]]  // J
+        ];
+
+        let currentShape = getRandomShape();
+        let currentPosition = { row: 0, col: 4 };
+
+        function getRandomShape() {
+            return shapes[Math.floor(Math.random() * shapes.length)];
+        }
+
+        function drawShape() {
+            clearShape();
+            currentShape.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    if (cell) {
+                        const cellElement = cells.find(c => c.dataset.row == (currentPosition.row + rowIndex) && c.dataset.col == (currentPosition.col + colIndex));
+                        if (cellElement) {
+                            cellElement.classList.add('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        function clearShape() {
+            cells.forEach(cell => cell.classList.remove('active'));
+        }
+
+        function moveDown() {
+            currentPosition.row++;
+            if (checkCollision()) {
+                currentPosition.row--;
+                freezeShape();
+                const linesCleared = checkLines(); // 更新为返回消除的行数
+                updateScore(linesCleared); // 更新分数
+                currentShape = getRandomShape();
+                currentPosition = { row: 0, col: 4 };
+                if (checkCollision()) {
+                    alert('游戏结束');
+                    document.location.reload();
+                }
+            }
+            drawShape();
+        }
+
+        function moveLeft() {
+            currentPosition.col--;
+            if (checkCollision()) {
+                currentPosition.col++;
+            }
+            drawShape();
+        }
+
+        function moveRight() {
+            currentPosition.col++;
+            if (checkCollision()) {
+                currentPosition.col--;
+            }
+            drawShape();
+        }
+
+        function rotateShape() {
+            const rotatedShape = currentShape[0].map((val, index) => currentShape.map(row => row[index]).reverse());
+            const tempShape = currentShape;
+            currentShape = rotatedShape;
+            if (checkCollision()) {
+                currentShape = tempShape;
+            }
+            drawShape();
+        }
+
+        function checkCollision() {
+            return currentShape.some((row, rowIndex) => {
+                return row.some((cell, colIndex) => {
+                    if (cell) {
+                        const newRow = currentPosition.row + rowIndex;
+                        const newCol = currentPosition.col + colIndex;
+                        if (newRow >= rows || newCol < 0 || newCol >= cols) {
+                            return true;
+                        }
+                        const cellElement = cells.find(c => c.dataset.row == newRow && c.dataset.col == newCol);
+                        return cellElement && cellElement.classList.contains('frozen');
+                    }
+                    return false;
+                });
+            });
+        }
+
+        function freezeShape() {
+            currentShape.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    if (cell) {
+                        const cellElement = cells.find(c => c.dataset.row == (currentPosition.row + rowIndex) && c.dataset.col == (currentPosition.col + colIndex));
+                        if (cellElement) {
+                            cellElement.classList.remove('active');
+                            cellElement.classList.add('frozen');
+                        }
+                    }
+                });
+            });
+        }
+
+        function checkLines() {
+            let linesCleared = 0; // 初始化消除行的计数
+            for (let row = rows - 1; row >= 0; row--) {
+                const line = cells.filter(cell => cell.dataset.row == row && cell.classList.contains('frozen'));
+                if (line.length === cols) {
+                    // 移除填满的行
+                    line.forEach(cell => {
+                        cell.classList.remove('frozen');
+                    });
+
+                    // 将上方的行下降一格
+                    for (let r = row - 1; r >= 0; r--) {
+                        cells.filter(cell => cell.dataset.row == r).forEach(cell => {
+                            const belowCell = cells.find(c => c.dataset.row == (parseInt(cell.dataset.row) + 1) && c.dataset.col == cell.dataset.col);
+                            if (belowCell) {
+                                belowCell.classList.toggle('frozen', cell.classList.contains('frozen'));
+                            }
+                            cell.classList.remove('frozen');
+                        });
+                    }
+                    linesCleared++; // 每消除一行，计数++
+                    row++; // 重新检查当前行
+                }
+            }
+            return linesCleared; // 返回消除的行数
+        }
+
+        function updateScore(linesCleared) {
+            score += linesCleared * 100; // 例如每消除一行加100分
+            scoreDisplay.innerText = `分数: ${score}`; // 更新显示
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowDown') {
+                moveDown();
+            } else if (event.key === 'ArrowLeft') {
+                moveLeft();
+            } else if (event.key === 'ArrowRight') {
+                moveRight();
+            } else if (event.key === 'ArrowUp') {
+                rotateShape();
+            }
+        });
+
+        setInterval(moveDown, 500);
+        drawShape();
+    </script>
+</body>
+</html>
