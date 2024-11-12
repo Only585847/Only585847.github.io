@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>解压小游戏</title>
+        <link href="/css/games/爆炸者/爆炸者.css" rel="stylesheet" type="text/css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> <!-- 禁止缩放 -->
+    </head>
+    <body>
+        <div id="info">
+            <div class="heading">
+                <h1 class="title">爆爆爆</h1>
+                <p class="game-intro">wasd/方向键 移动<br>其他按键 增幅<br> 空格键 爆炸</p>
+            </div>
+            <div class="speed">
+                生命值 <var id="health"></var> <br>
+                得分 <var id="score"></var> <br> <br>
+                当前buff <var id="speed">1</var> <var>x</var> <br>
+                当前坐标 <var id="position">0,0</var> <br>
+            </div>
+        </div>
+        <canvas id="canvas" width="1920" height="1080">不支持画布</canvas>
+        <script src="/js/games/爆炸者/爆炸者.js"></script>
+    </body>
+</html>

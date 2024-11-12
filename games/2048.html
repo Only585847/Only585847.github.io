@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layout {
+            width: 260px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layout-top {
+            width: 260px;
+            height: 5rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .layout-top .title{
+            font-size: 2rem;
+            font-weight: bold;
+            color: #7B6752;
+        }
+        .layout-top .score-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layout-container {
+            width: 244px;
+            height: 244px;
+            position: relative;
+        }
+
+        .game-container {
+            box-sizing: border-box;
+            border: 2px solid #999;
+            border-radius: 0.5rem;
+            width: 244px;
+            height: 244px;
+            background-color: #999;
+            display: grid;
+            grid-template-columns: repeat(4, 0fr); /* 4列 无间隙 */
+            grid-gap: 0;
+            position: relative;
+        }
+
+        .game-grid {
+            border: 3px solid #999;
+            background-color: #CBC0B4;
+            border-radius: 0.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        .game-grid-number {
+            position: absolute;
+        }
+
+        .game-over {
+            display: none;
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            top: 0;
+            left: 0;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            background-color: #14141463;
+        }
+        .game-over p {
+            color: #FFFFFF;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .container-style {
+            width: 5rem;
+            height: 2.5rem;
+            background-color: #CBC0B4;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #FFFFFF;
+        }
+        .container-style.max-score-container {
+            margin-left: 0.5rem;
+        }
+
+        .reset-container {
+            width: 240px;
+            height: 2rem;
+            border-radius: 0.5rem;
+            background-color: #7B6752;
+            margin-top: 0.5rem;
+        }
+        .reset-container .reset {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: transparent;
+            color: #FFFFFF;
+            outline: none;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            } 
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .score-title {
+            font-size: 9px;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <div class="layout-top">
+            <div class="title">2048</div>
+            <div class="score-container">
+                <div class="container-style">
+                    <div class="score-title">SCORE</div>
+                    <div class="score"></div>
+                </div>
+                <div class="container-style max-score-container">
+                    <div class="score-title">MAX SCORE</div>
+                    <div class="max-score"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layout-container">
+            <div class="game-container"></div>
+            <div class="game-over"><p>Game Over</p></div>
+        </div>
+        <div class="reset-container"><button class="reset">重置</button></div>
+    </div>
+
+    <script>
+        const resetBtn = document.getElementsByClassName('reset');
+        const container = document.getElementsByClassName('game-container');
+        const gameOverText = document.getElementsByClassName('game-over');
+        const scoreText = document.getElementsByClassName('score');
+        const maxScoreText = document.getElementsByClassName('max-score');
+        let gridRow = 4;
+        let gridCol = 4;
+        let data = [];
+        let pointList = [];
+        let score = 0;
+        let maxScore = 0;
+
+        const gridColor = {
+            2: '#fff4ea',
+            4: '#eee2cc',
+            8: '#f2b179',
+            16: '#f59563',
+            32: '#f67c5f',
+            64: '#f65e3b',
+            128: '#edcf72',
+            256: '#edcc61', 
+            512: '#edc850',
+            1024: '#edc53f',
+            2048: '#edc22e',
+            4096: '#3c3a32',
+            8192: '#3c3a32',
+            16384: '#3c3a32',
+            32768: '#3c3a32',
+            65536: '#3c3a32',
+            131072: '#3c3a32',
+            262144: '#3c3a32',
+            524288: '#3c3a32',
+        }
+
+        // 随机生成 2 或 4
+        const randomNum = () => {
+            const num = Math.random() > 0.5 ? 2 : 4;
+            return num;
+        }
+
+        // 随机生成坐标
+        const randomGrid = () => {
+            const x = Math.floor(Math.random() * gridRow);
+            const y = Math.floor(Math.random() * gridCol);
+            return [x, y];
+        }
+
+        const initBroad = () => {
+            gameOverText[0].style.display = 'none';
+            scoreText[0].innerHTML = score
+            maxScoreText[0].innerHTML = maxScore
+            for (let i = 0; i < gridRow; i++) {
+                const _arr = []
+                for (let j = 0; j < gridRow; j++) {
+                    _arr.push(0);
+                    const grid = document.createElement('div');
+                    grid.classList.add('game-grid');
+                    grid.classList.add(`game-grid-${i}${j}`);
+                    container[0].appendChild(grid);
+                }
+                data.push(_arr);
+            }
+        }
+
+        // 设置方块样式
+        const setGridNumberStyle = (grid, x, y, number) => {
+            grid.innerText = number;
+            grid.style.top = `${x * 60}px`;
+            grid.style.left = `${y * 60}px`;
+            grid.style.backgroundColor = gridColor[number];
+            grid.style.color = number < 8 ? '#000000' : '#FFFFFF';
+            grid.classList.add(`game-grid-number-${x}${y}`);
+        }
+        // 将数据渲染到方格中
+        const renderGrid = (x, y, number, oldX, oldY, isGenerating = false) => {
+            if(isGenerating) {
+                const grid = document.createElement('div');
+                grid.classList.add('game-grid');
+                grid.classList.add('game-grid-number');
+                grid.style.animation = "fadeIn 0.3s";
+                setGridNumberStyle(grid, x, y, number);
+                container[0].appendChild(grid);
+            } else {
+                if(oldX !== null && oldY !== null) {
+                    if(data[x][y] === data[oldX][oldY]) {
+                        const _g = document.getElementsByClassName(`game-grid-number-${x}${y}`);
+                        container[0].removeChild(_g[0])
+                    }
+                    const grid = document.getElementsByClassName(`game-grid-number-${oldX}${oldY}`);
+                    grid[0].style.transition = 'top 0.05s, left 0.05s';
+                    setGridNumberStyle(grid[0], x, y, number)
+                    grid[0].classList.remove(`game-grid-number-${oldX}${oldY}`);
+                }
+            }
+            data[x][y] = number;
+        }
+
+        // 生成随机数字并渲染到页面上
+        const generatingNum = () => {
+            const [x, y] = randomGrid();
+            if(data[x][y] !== 0) {
+                generatingNum();
+            } else {
+                container[0].style.transition = '';
+                renderGrid(x, y, randomNum(), null, null, true);
+            }
+        }
+
+        // 判断是否在范围内
+        const judgeIsRange =  {
+            left: (x, y) => y > 0,
+            right: (x, y) => y < gridCol - 1,
+            up: (x, y) => x > 0,
+            down: (x, y) => x < gridRow - 1
+        }
+
+        // 获取下一个移动位置的坐标
+        const getNextGrid = {
+            left: (x, y) => [x, y - 1],
+            right: (x, y) => [x, y + 1],
+            up: (x, y) => [x - 1, y],
+            down: (x, y) => [x + 1, y]
+        }
+
+        // 移动逻辑
+        const nextGrid = (x, y, direction, isCanMove) => {
+            if(data[x][y] === 0) return isCanMove
+
+            let row = x;
+            let col = y;
+            while(judgeIsRange[direction](row, col)) {
+                const [nextRow, nextCol] = getNextGrid[direction](row, col)
+                if(data[nextRow][nextCol] === 0) {
+                    renderGrid(nextRow, nextCol, data[row][col], row, col)
+                    renderGrid(row, col, 0, null, null)
+                    isCanMove = true
+                } else if(data[nextRow][nextCol] === data[row][col]) {
+                    if(pointList.includes(`${nextRow}${nextCol}`)) {
+                        break
+                    } 
+                    score += data[row][col] * 2
+                    scoreText[0].innerHTML = score
+                    if(score > 9999999) {
+                        scoreText[0].style.fontSize = '15px'
+                    }
+                    renderGrid(nextRow, nextCol, data[row][col] * 2, row, col)
+                    renderGrid(row, col, 0, null, null)
+                    isCanMove = true
+                    pointList.push(`${nextRow}${nextCol}`)
+                    break
+                } else {
+                    break
+                }
+                row = nextRow;
+                col = nextCol;
+            }
+
+            return isCanMove
+        }
+
+        // 判断游戏是否结束
+        const judgeIsOver = () => {
+            for(let i = 0; i < gridRow; i++) {
+                for(let j = 0; j < gridCol; j++) {
+                    if(data[i][j] === 0) return false
+                    if(i > 0 && data[i][j] === data[i - 1][j]) return false
+                    if(i < gridRow - 1 && data[i][j] === data[i + 1][j]) return false
+                    if(j > 0 && data[i][j] === data[i][j - 1]) return false
+                    if(j < gridCol - 1 && data[i][j] === data[i][j + 1]) return false
+                }
+            }
+            
+            gameOverText[0].style.display = 'flex'
+            return true
+        }
+        
+        // 向下移动
+        const handleDown = () => {
+            let isCanMove = false
+            // 从 data 倒数第二行数据开始从下往上比较
+            pointList = []
+            for(let j = 0; j < gridCol; j++) {
+                for(let i = gridRow - 2; i >= 0; i--) {
+                    isCanMove = nextGrid(i, j, 'down', isCanMove)
+                }
+            }
+            return isCanMove
+        }
+
+        // 向上移动
+        const handleUp = () => {
+            let isCanMove = false
+            pointList = []
+            // 从 data 第二行数据开始从下往上比较
+            for(let j = 0; j < gridCol; j++) {
+                for(let i = 1; i < gridRow; i++) {
+                    isCanMove = nextGrid(i, j, 'up', isCanMove)
+                }
+            }
+            return isCanMove
+        }
+
+        // 向左移动
+        const handleLeft = () => {
+            let isCanMove = false
+            pointList = []
+            // 从 data 第二列数据开始从左往右比较
+            for(let i = 0; i < gridRow; i++) {
+                for(let j = 0; j < gridCol; j++) {
+                    isCanMove = nextGrid(i, j, 'left', isCanMove)
+                }
+            }
+            return isCanMove
+        }
+
+        // 向右移动
+        const handleRight = () => {
+            let isCanMove = false
+            // 从 data 倒数第二列数据开始从右往左比较
+            for(let i = 0; i < gridRow; i++) {
+                for(let j = gridCol - 2; j >= 0; j--) {
+                    isCanMove = nextGrid(i, j, 'right', isCanMove)
+                }
+            }
+            return isCanMove
+        }
+        
+        const controlGame = (e) => {
+            switch (e.keyCode) {
+                case 37:
+                    // console.log('left');
+                    if(handleLeft()) {
+                        generatingNum()
+                        judgeIsOver()
+                    }
+                    break;
+                case 38:
+                    // console.log('up');
+                    if(handleUp()) {
+                        generatingNum()
+                        judgeIsOver()
+                    }
+                    break;
+                case 39:
+                    // console.log('right');
+                    if(handleRight()) {
+                        generatingNum()
+                        judgeIsOver()
+                    }
+                    break;
+                case 40:
+                    // console.log('down');
+                    if(handleDown()) {
+                        generatingNum()
+                        judgeIsOver()
+                    }
+                    break;
+            }
+        }
+        // 监听按键
+        document.addEventListener('keydown', controlGame);
+
+        const initGame = () => {
+            gridRow = 4;
+            gridCol = 4;
+            data = [];
+            pointList = [];
+            score = 0;
+            while(container[0].firstChild) {
+                container[0].removeChild(container[0].firstChild);
+            }
+            initBroad()
+            generatingNum()
+            generatingNum()
+        }
+        initGame()
+
+        resetBtn[0].addEventListener('click', () => {
+            initGame()
+        })
+    </script>
+</body>
+</html>

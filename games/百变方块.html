@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>' '</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border: none;
+            color: #000;
+
+            --game-row: 10;
+            --next-block-row: 5;
+
+            --game-width: 306px;
+            --game-height: 306px;
+            --block-width: 30px;
+            --block-height: 30px;
+            --next-block-width: 15px;
+            --next-block-height: 15px;
+
+            --bg-color: #fff;
+            --border-color: #000;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* 小方格的样式 */
+        .cell {
+            width: var(--block-width);
+            height: var(--block-height);
+            background-color: #ccc;
+            border: 1px solid #000;
+        }
+
+        /* 下一个小方格的样式 */
+        .next-cell {
+            width: var(--next-block-width);
+            height: var(--next-block-height);
+            background-color: #ce1a1a;
+            border: 1px solid #000;
+            pointer-events: none;
+        }
+
+        .moving-block {
+            background-color: transparent;
+        }
+
+        .moving-block .cell {
+            width: var(--block-width);
+            height: var(--block-height);
+        }
+
+        /* 隐藏元素 */
+        .element-hidden {
+            visibility: hidden;
+        }
+
+        /* 显示元素 */
+        .element-show {
+            visibility: visible;
+        }
+
+        .layout {
+            width: var(--game-width);
+            height: 100%;
+            background-color: var(--bg-color);
+            color: #fff;
+        }
+
+        .layout .layout-top {
+            width: 100%;
+            height: 60px;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .layout .layout-container {
+            width: var(--game-width);
+            height: var(--game-height);
+            border: 3px solid var(--border-color);
+            margin: 10px 0;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(var(--game-row), 0fr);
+            /* 4列 无间隙 */
+        }
+
+        .layout .layout-bottom {
+            width: 100%;
+            height: 100px;
+        }
+
+        .gama-next-block-container {
+            width: 100%;
+            height: 100%;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .next-block {
+            padding: 8px;
+            background-color: #e68989;
+            display: grid;
+            grid-template-columns: repeat(5, 0fr);
+        }
+    </style>
+</head>
+
+<body class="flex-center">
+    <div class="layout flex-center">
+        <div class="layout-top flex-center">
+            <div class="reset"><button class="reset-btn">RESET</button></div>
+            <div class="score-container flex-center">
+                <div class="score-title">SCORE</div>
+                <div class="score">999999</div>
+            </div>
+            <div class="max-score-container flex-center">
+                <div class="max-score-title">MAX SCORE</div>
+                <div class="max-score">999999</div>
+            </div>
+        </div>
+        <div class="layout-container flex-center">
+            <div class="game-container"></div>
+        </div>
+        <div class="layout-bottom">
+            <div class="gama-next-block-container flex-center">
+                <div class="next-block next-block-0"></div>
+                <div class="next-block next-block-1"></div>
+                <div class="next-block next-block-2"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const layout = document.querySelector('.layout');
+    // 放置区域
+    const gameContainer = document.querySelector('.game-container');
+    // “下一个方块” 放置区域
+    const nextBlockContainer = document.getElementsByClassName('next-block');
+
+    // 当前分数显示区域
+    const scoreContainer = document.querySelector('.score');
+    // 最高分显示区域
+    const maxScoreContainer = document.querySelector('.max-score');
+    // 游戏区域方格数
+    let gameRow = 10
+    let gameCol = 10
+    // 方格边长
+    const cellSide = 30
+    // 下一个方块显示的个数
+    let nextBlockCount = 3
+    // 用于存储游戏数据
+    let data = []
+    let nextBlockData = {}
+    // 用于存储分数
+    let score = 0
+    // 用于存储最高分
+    let maxScore = 0
+    // 当前正在移到的 下一个方块
+    let currentNextBlock = null
+    // 判断方块是否能放下
+    let putList = []
+
+    const colorList = ['#e68989', '#8989e6', '#e6e689', '#99e6e6', '#79e689', '#8689e6', '#26e689']
+
+    // 方块类型
+    const shape = [[
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ], [
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0]
+    ], [
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ], [
+        [1, 1, 1, 0, 0],
+        [1, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ], [
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ], [
+        [1, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ], [
+        [1, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0],
+    ]]
+    // 方块类型数
+    const shapeCount = shape.length
+
+    // 判断 game-contain 中是否能放下此方块
+    // const isCanPutDown = (e) => {
+    // }
+
+    // 判断游戏是否结束
+    const isGameOver = () => {
+    }
+
+    // 清空画布背景色
+    const clearGameContainer = () => {
+        putList = []
+        for (let i = 0; i < gameRow; i++) {
+            for (let j = 0; j < gameCol; j++) {
+                const cell = gameContainer.children[i * gameCol + j]
+                if (data[i][j].data === 0) {
+                    cell.style.backgroundColor = 'transparent'
+                }
+            }
+        }
+    }
+
+    // 判断坐标是否在范围中
+    const isInRange = (x, y) => { return x >= 0 && x < gameRow && y >= 0 && y < gameCol }
+
+    class CreateNextBlock {
+        data = []
+        dom = null
+        // 记录当前方块放置在下一个方块数组的哪个位置
+        index = -1
+        backgroundColor = undefined
+        type = null
+        constructor(data, index, type) {
+            this.data = data
+            this.index = index
+            this.dom = null
+            this.type = type
+        }
+
+        drawNextBlock() {
+            for (let j = 0; j < this.data.length; j++) {
+                for (let k = 0; k < this.data[j].length; k++) {
+                    const nextCell = document.createElement('div')
+                    nextCell.className = `cell next-cell`
+                    if (this.data[j][k] === 1) {
+                        nextCell.classList.add('element-shown')
+                        nextCell.dataset.type = 'shown'
+                    } else {
+                        nextCell.classList.add('element-hidden')
+                        nextCell.style.width = '0px'
+                        nextCell.style.height = '0px'
+                        nextCell.style.border = 'none'
+                        nextCell.dataset.type = 'hidden'
+                    }
+                    if (!this.backgroundColor) {
+                        this.backgroundColor = colorList[this.type]
+                    }
+                    nextCell.style.backgroundColor = this.backgroundColor ? this.backgroundColor : '#000'
+                    // nextBlockContainer[this.index].style.gridTemplateColumns = `repeat(${this.data[j].length}, 0fr)`
+                    nextBlockContainer[this.index].appendChild(nextCell)
+                    this.dom = nextBlockContainer[this.index]
+                    this.dom.dataset.hidden = false
+                    nextBlockContainer[this.index].addEventListener('mousedown', this.mouseDown)
+                }
+            }
+        }
+
+        mouseDown(e) {
+            const _e = e.target
+            let ele = _e.cloneNode(true)
+            _e.style.visibility = 'hidden'
+            ele.classList.add('moving-block')
+            document.body.appendChild(ele)
+            ele.style.position = 'absolute'
+            ele.style.backgroundColor = 'transparent'
+            ele.style.padding = '0px'
+            ele.style.zIndex = 999
+            ele.style.left = `${e.clientX - ele.offsetWidth / 2}px`
+            ele.style.top = `${e.clientY - ele.offsetHeight}px`
+            currentNextBlock = nextBlockData[ele.classList[1]]
+
+            window.onmousemove = (e) => {
+                clearGameContainer()
+
+                // 获取元素的宽高
+                const _width = ele.offsetWidth
+                const _height = ele.offsetHeight
+
+                // 将元素移动到点击坐标的中上方
+                const left = e.clientX - _width / 2
+                const top = e.clientY - _height
+                const endLeft = left + _width
+                const endTop = top + _height
+                ele.style.left = `${left}px`
+                ele.style.top = `${top}px`
+
+                // 获取左上角位置距离移动元素左上角最近的元素
+                const sCoverCell = document.elementFromPoint(left - 1, top - 1);
+                const eCoverCell = document.elementFromPoint(endLeft + 1, endTop + 1);
+                
+                if(sCoverCell) {
+                    let row = parseInt(sCoverCell.dataset.row)
+                    let col = parseInt(sCoverCell.dataset.col)
+                    if(isInRange(row, col)) {
+                        // 被覆盖方块的中心坐标
+                        const cCenterX = sCoverCell.offsetLeft + sCoverCell.offsetWidth / 2
+                        const cCenterY = sCoverCell.offsetTop + sCoverCell.offsetHeight / 2
+                        if (cCenterX < left && cCenterY < top) {
+                            row = row + 1
+                            col = col + 1
+                            // console.log('右下')
+                        } else if (cCenterX < left && cCenterY > top) {
+                            col = col + 1
+                            // console.log('右上')
+                        } else if (cCenterX > left && cCenterY < top) {
+                            row = row + 1
+                            // console.log('左下')
+                        } 
+
+                        if (isInRange(row, col)) {
+                            const _nextData = currentNextBlock.data
+                            for (let i = 0; i < _nextData.length; i++) {
+                                for (let j = 0; j < _nextData[i].length; j++) {
+                                    if (_nextData[i][j] === 1) {
+                                        if (isInRange(row + i, col + j)) {
+                                            const cell = data[row + i][col + j]
+                                            if (cell.data === 0) {
+                                                cell.dom.style.backgroundColor = 'yellow'
+                                                putList.push([row + i, col + j, currentNextBlock.backgroundColor])
+                                            } else {
+                                                console.log('超出边界1')
+                                                putList = []
+                                                clearGameContainer()
+                                                return
+                                            }
+                                        } else {
+                                            console.log('超出边界2')
+                                            putList = []
+                                            clearGameContainer()
+                                            return
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            window.onmouseup = (e) => {
+                const isCanPutDown = putList.length > 0
+                if(isCanPutDown) {
+                    for (let i = 0; i < putList.length; i++) {
+                        const [row, col, backgroundColor] = putList[i]
+                        data[row][col].data = 1
+                        data[row][col].dom.style.backgroundColor = backgroundColor
+    
+                    }
+                    _e.style.visibility = 'hidden'
+                    _e.dataset.hidden = true
+                } else {
+                    _e.style.visibility = 'visible'
+                    _e.dataset.hidden = false
+                }
+
+                // 判断是否还能放下其他方块
+                let _a = true
+                for(let i = 0; i < data.length; i++) {
+                    abc: for(let j = 0; j < data[i].length; j++) {
+                        if(data[i][j] === 1) {
+                            break
+                        } else {
+                            const subData = data.slice(i, i + 5).map(row => row.slice(j, j + 5))
+                            if(subData.length !== 5) break 
+                            tetst: for(let m = 0; m < subData.length; m++) {
+                                if(subData[m].length !== 5) break abc
+                                for(let n = 0; n < subData[m].length; n++) {
+                                    console.log('current', currentNextBlock.data[m][n])
+                                    if(currentNextBlock.data !== subData[m][n].data === 0) {
+                                        break tetst
+                                    }
+                                }
+                            }
+                            console.log('sub', subData)
+                        }
+                    }
+                }
+
+                let IsNoNextBlock = true
+                // console.log('nextBlockData', nextBlockData)
+                for(let field in nextBlockData) {
+                    const block = nextBlockData[field]
+                    const dom = block.dom
+                    if(dom.dataset.hidden === 'false') {
+                        IsNoNextBlock = false
+                        break
+                    }
+                }
+
+
+                if(IsNoNextBlock) {
+                    drawNextBlock()
+                }
+
+                document.body.removeChild(ele)
+                ele = null
+                window.onmousemove = null
+                window.onmouseup = null
+            }
+            console.log(e)
+        }
+    }
+
+    // 绘制下一个方块
+    const drawNextBlock = () => {
+        // nextBlockData = {}
+        for (let i = 0; i < nextBlockCount; i++) {
+            if(nextBlockData[`next-block-${i}`]) {
+                nextBlockData[`next-block-${i}`].dom.innerHTML = null
+                nextBlockData[`next-block-${i}`].dom.style.visibility = 'visible'
+            }
+            const randomNum = Math.floor(Math.random() * shapeCount)
+            const nextBlock = shape[randomNum]
+            const createNextBlock = new CreateNextBlock(nextBlock, i, randomNum)
+            createNextBlock.drawNextBlock()
+            nextBlockData[`next-block-${i}`] = createNextBlock
+        }
+    }
+
+    // 初始化游戏数据
+    const initGame = () => {
+        data = []
+        nextBlockData = {}
+        for (let i = 0; i < gameRow; i++) {
+            data.push(new Array(gameCol).fill({}))
+            for (let j = 0; j < gameCol; j++) {
+                const cell = document.createElement('div')
+                cell.className = `cell cell-${i}-${j}`
+                cell.dataset.row = i
+                cell.dataset.col = j
+                gameContainer.appendChild(cell)
+                data[i][j] = {
+                    id: `${i}${j}`,
+                    className: `cell cell-${i}-${j}`,
+                    data: 0,
+                    dom: cell,
+                    row: i,
+                    col: j
+                }
+            }
+        }
+        drawNextBlock()
+    }
+    initGame()
+
+    // 重置按钮
+    const resetBtn = document.querySelector('.reset-btn');
+    resetBtn.addEventListener('click', () => { window.location.reload() });
+</script>
+
+</html>

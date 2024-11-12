@@ -1,0 +1,49 @@
+body{
+    background-color: #000000;
+    color: #a0a0a0;
+
+    margin: 0;
+}
+.heading{
+    z-index: 1;
+    background-color: #0008;
+    position: absolute;
+    margin: 10px;
+    width: 400px;
+    height: 100px;
+    border-radius: 10px;
+}
+.title{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: absolute;
+    font-size: 60px;
+    margin: 10px;
+    z-index: 1;
+}
+.game-intro{
+    font-family:'SIMHEI', Tahoma, Geneva, Verdana, sans-serif;
+    position: absolute;
+    font-size: 20px;
+    margin: 20px 0px 0px 200px;
+    z-index: 1;
+}
+.speed{
+    font-family:'SIMHEI', Tahoma, Geneva, Verdana, sans-serif;
+    position: absolute;
+    float: right;
+    font-size: 20px;
+    right: 1%;
+    top :1% ;
+    z-index: 1;
+    padding: 5px;
+    background-color: #0008;
+    border-radius: 5px;
+}
+#canvas{
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
