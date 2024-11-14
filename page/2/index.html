@@ -3,6 +3,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-default-color-scheme=auto>
 
+<head>
+  <link rel="stylesheet" href="/css/musi_player/player.css">
+<meta name="generator" content="Hexo 7.3.0"></head>
+
 
 
 <head>
@@ -93,7 +97,7 @@
 
 
   
-<meta name="generator" content="Hexo 7.3.0"></head>
+</head>
 
 
 <body>
@@ -238,6 +242,46 @@
 </div>
 
   </header>
+
+
+  <div id="QPlayer">
+    <div id="pContent">
+      <div id="player">
+        <span class="cover"></span>
+        <div class="ctrl">
+          <div class="musicTag marquee">
+            <strong>Title</strong>
+             <!-- <span> - </span> -->
+            <span class="artist">Artist</span>
+          </div>
+          <div class="progress">
+            <div class="timer left">0:00</div>
+            <div class="contr">
+              <div class="rewind icon"></div>
+              <div class="playback icon"></div>
+              <div class="fastforward icon"></div>
+            </div>
+            <div class="right">
+              <div class="liebiao icon"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ssBtn" style="background:#000 none repeat scroll 0% 0%">
+              <div class="adf"></div>
+        </div>
+    </div>
+    <ol id="playlist"></ol>
+    </div>
+<script src="/js/music_player/jquery.min.js"></script>
+<script src="/js/music_player/jquery.marquee.min.js"></script>
+<script type="text/javascript" src="/js/music_player/playlist.js"></script>
+<script src="/js/music_player/player.js"></script>
+
+
+
+
+
 
   <main>
     
@@ -541,5 +585,5 @@
   <noscript>
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":145,"height":315},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body>
 </html>
