@@ -140,7 +140,7 @@
 
 	// Fire when track loaded completely
 	var afterLoad = function(){
-		if (autoplay == true) play();
+		// if (autoplay == true) play();
 	}
 
 	// Load track
