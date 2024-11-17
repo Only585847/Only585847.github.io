@@ -131,7 +131,6 @@
 		} else { 
 			if (currentTrack < playlist.length) switchTrack(++currentTrack);
 		}
-		
 	}
 
 	var beforeLoad = function(){
@@ -142,6 +141,8 @@
 	var afterLoad = function(){
 		// if (autoplay == true) play();
 	}
+
+	
 
 	// Load track
 	var loadMusic = function(i){
