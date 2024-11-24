@@ -1,9 +1,9 @@
 // create instance of kinet with custom settings
-var kinet = new kinet({
-  acceleration: 0.02,
-  friction: 0.25,
-  names: ["x", "y"],
-});
+// var kinet = new kinet({
+//   acceleration: 0.02,
+//   friction: 0.25,
+//   names: ["x", "y"],
+// });
 
 // select circle element
 var circle = document.getElementById('circle');
@@ -20,10 +20,10 @@ document.addEventListener('mousemove', function (event) {
 });
 
 // log
-kinet.on('start', function() {
-  console.log('start');
-});
+// kinet.on('start', function() {
+//   console.log('start');
+// });
 
-kinet.on('end', function() {
-  console.log('end');
-});
+// kinet.on('end', function() {
+//   console.log('end');
+// });
